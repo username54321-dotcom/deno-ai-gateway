@@ -1,3 +1,4 @@
+import { groq } from "./clients/groq.ts";
 import { app } from "./clients/hono.ts";
 import { openRouter } from "./clients/openRouter.ts";
 
@@ -13,26 +14,30 @@ app.post("/", async (hctx) => {
   const body = await hctx.req.json();
   const prompt = body.prompt;
   const systemPrompt = body.systemPrompt ?? "You Are A Helpful Ai Assistant";
-  const model = body.model ?? "mistralai/devstral-2512:free";
+  const model = body.model ?? "llama-3.3-70b-versatile";
   const reasoning = body.reasoning ?? "medium";
 
   if (!prompt)
     return hctx.json({ auth: true, error: "no provided prompt" }, 400);
-
-  const aiRequest = await openRouter.chat.send({
+  const aiRequest = await groq.chat.completions.create({
     model: model,
     messages: [
       systemPrompt && { role: "system", content: systemPrompt },
       { role: "user", content: prompt },
     ],
-    reasoning: { effort: reasoning },
   });
-  console.log(
-    aiRequest.object,
-    "------------------------------------------------------------------------------"
-  );
+
+  //   const aiRequest = await openRouter.chat.send({
+  //     model: model,
+  //     messages: [
+  //       systemPrompt && { role: "system", content: systemPrompt },
+  //       { role: "user", content: prompt },
+  //     ],
+  //     reasoning: { effort: reasoning },
+  //   });
+
   const reply = aiRequest.choices[0].message.content;
   return hctx.json({ auth: true, reply: reply }, 200);
 });
 
-Deno.serve(app.fetch);
+Deno.serve({ port: 443 }, app.fetch);
