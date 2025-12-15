@@ -2,6 +2,7 @@ import { groq } from "./clients/groq.ts";
 import { app } from "./clients/hono.ts";
 import { openRouter } from "./clients/openRouter.ts";
 
+const randomNumber = Math.floor(Math.random() * 2);
 const authKey = Deno.env.get("AUTH_KEY");
 
 app.post("/", async (hctx) => {
@@ -19,22 +20,26 @@ app.post("/", async (hctx) => {
 
   if (!prompt)
     return hctx.json({ auth: true, error: "no provided prompt" }, 400);
-  const aiRequest = await groq.chat.completions.create({
-    model: model,
-    messages: [
-      systemPrompt && { role: "system", content: systemPrompt },
-      { role: "user", content: prompt },
-    ],
-  });
 
-  //   const aiRequest = await openRouter.chat.send({
-  //     model: model,
-  //     messages: [
-  //       systemPrompt && { role: "system", content: systemPrompt },
-  //       { role: "user", content: prompt },
-  //     ],
-  //     reasoning: { effort: reasoning },
-  //   });
+  let aiRequest;
+  if (randomNumber === 0) {
+    aiRequest = await groq.chat.completions.create({
+      model: model,
+      messages: [
+        systemPrompt && { role: "system", content: systemPrompt },
+        { role: "user", content: prompt },
+      ],
+    });
+  } else {
+    aiRequest = await openRouter.chat.send({
+      model: model,
+      messages: [
+        systemPrompt && { role: "system", content: systemPrompt },
+        { role: "user", content: prompt },
+      ],
+      reasoning: { effort: reasoning },
+    });
+  }
 
   const reply = aiRequest.choices[0].message.content;
   return hctx.json({ auth: true, reply: reply }, 200);
