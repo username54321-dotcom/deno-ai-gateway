@@ -24,7 +24,7 @@ app.post("/", async (hctx) => {
   let aiRequest;
   if (randomNumber === 0) {
     aiRequest = await groq.chat.completions.create({
-      model: model,
+      model: "llama-3.3-70b-versatile",
       messages: [
         systemPrompt && { role: "system", content: systemPrompt },
         { role: "user", content: prompt },
@@ -32,7 +32,7 @@ app.post("/", async (hctx) => {
     });
   } else {
     aiRequest = await openRouter.chat.send({
-      model: model,
+      model: "tngtech/deepseek-r1t-chimera:free",
       messages: [
         systemPrompt && { role: "system", content: systemPrompt },
         { role: "user", content: prompt },
