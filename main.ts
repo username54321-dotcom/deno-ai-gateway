@@ -1,28 +1,33 @@
 import { groq } from "./clients/groq.ts";
 import { app } from "./clients/hono.ts";
 import { openRouter } from "./clients/openRouter.ts";
+import { getProvidor } from "./utils/getProvidor.ts";
 
-const randomNumber = Math.floor(Math.random() * 2);
 const authKey = Deno.env.get("AUTH_KEY");
 
 app.post("/", async (hctx) => {
+  // Get auth header and verify equality
   const suthHeader = hctx.req.header("Authorization");
-
-  if (suthHeader != authKey) {
+  if (suthHeader !== authKey) {
     return hctx.json({ auth: false }, 404);
   }
 
+  // Get request arguments
   const body = await hctx.req.json();
   const prompt = body.prompt;
   const systemPrompt = body.systemPrompt ?? "You Are A Helpful Ai Assistant";
   const model = body.model ?? "llama-3.3-70b-versatile";
   const reasoning = body.reasoning ?? "medium";
 
+  // Early return if no prompt
   if (!prompt)
     return hctx.json({ auth: true, error: "no provided prompt" }, 400);
 
+  // Determine which providor to use
+  const providor = await getProvidor();
+
   let aiRequest;
-  if (randomNumber === 0) {
+  if (providor === "groq") {
     aiRequest = await groq.chat.completions.create({
       model: "llama-3.3-70b-versatile",
       messages: [
@@ -45,4 +50,4 @@ app.post("/", async (hctx) => {
   return hctx.json({ auth: true, reply: reply }, 200);
 });
 
-Deno.serve({ port: 443 }, app.fetch);
+Deno.serve(app.fetch);
