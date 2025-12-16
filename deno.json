@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "dev": "deno run  --env --allow-env --watch --allow-net main.ts"
+    "dev": "deno run  --env --allow-env --unstable-kv --watch --allow-net main.ts"
   },
   "imports": {
     "@hono/hono": "jsr:@hono/hono@^4.11.1",
