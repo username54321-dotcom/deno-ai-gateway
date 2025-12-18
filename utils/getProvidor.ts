@@ -1,7 +1,7 @@
 import { kv } from "../clients/kv.ts";
 
-type Providors = "groq" | "openrouter";
-const providors = ["groq", "openrouter"] as const;
+type Providors = "groq" | "openrouter" | "gemini";
+const providors = ["groq", "openrouter", "gemini"] as const;
 
 export async function getProvidor(): Promise<Providors> {
   const currentProvidorIndex = await kv
