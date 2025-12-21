@@ -24,8 +24,12 @@ export const headerValidation = zValidator(
 
 const bodySchema = z.object({
   prompt: z.string({ error: "No Provided Prompt" }),
-  systemPrompt: z.string().optional().default("You Are A Helpful Ai Assistant"),
-  providor: z.enum(providors).optional(),
+  systemPrompt: z
+    .string()
+    .optional()
+    .default("You Are A Helpful Ai Assistant")
+    .nullable(),
+  providor: z.enum(providors).optional().nullable(),
   reasoning: z.enum(reasoningModes).optional().nullable(),
 });
 
