@@ -1,5 +1,3 @@
-import { error } from "node:console";
-
 export interface RespTemp {
   auth: boolean;
   error: null | string;

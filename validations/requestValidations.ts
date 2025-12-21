@@ -1,6 +1,5 @@
-import { string, z } from "zod";
+import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
-import { error } from "node:console";
 import { providors } from "../data/providors.ts";
 import { reasoningModes } from "../data/reasoningEnums.ts";
 

@@ -1,9 +1,8 @@
-import { contentTextToJSON } from "@openrouter/sdk/models/operations";
 import { gemini } from "./clients/gemini.ts";
 import { groq } from "./clients/groq.ts";
 import { app } from "./clients/hono.ts";
 import { openRouter } from "./clients/openRouter.ts";
-import { respTemp } from "./data/respTemplate.ts";
+import { respTemp as responseTemplate } from "./data/respTemplate.ts";
 import { getProvidor } from "./utils/getProvidor.ts";
 import {
   bodyValidation,
@@ -11,7 +10,7 @@ import {
 } from "./validations/requestValidations.ts";
 
 const authKey = Deno.env.get("AUTH_KEY");
-
+const respTemp = structuredClone(responseTemplate);
 app.post(
   "/",
   // Validation Middleware
