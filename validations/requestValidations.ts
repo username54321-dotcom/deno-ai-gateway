@@ -26,7 +26,7 @@ const bodySchema = z.object({
   prompt: z.string({ error: "No Provided Prompt" }),
   systemPrompt: z.string().optional().default("You Are A Helpful Ai Assistant"),
   providor: z.enum(providors).optional(),
-  reasoning: z.enum(reasoningModes).optional(),
+  reasoning: z.enum(reasoningModes).optional().nullable(),
 });
 
 export const bodyValidation = zValidator("json", bodySchema, (res, ctx) => {
