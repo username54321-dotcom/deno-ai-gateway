@@ -1,4 +1,4 @@
-# Deno Get Reply
+# Deno AI Gateway
 
 A robust, Deno-based API service that unifies multiple AI providers (Gemini, Groq, OpenRouter) into a single, easy-to-use interface. This project allows seamless text generation with automatic provider rotation and unified error handling.
 
@@ -23,7 +23,7 @@ A robust, Deno-based API service that unifies multiple AI providers (Gemini, Gro
 
     ```bash
     git clone <repository-url>
-    cd Deno-Get-Reply
+    cd deno-ai-gateway
     ```
 
 2.  **Environment Setup**
