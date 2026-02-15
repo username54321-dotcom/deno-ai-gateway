@@ -1,6 +1,7 @@
 import { gemini } from "./clients/gemini.ts";
 import { groq } from "./clients/groq.ts";
 import { app } from "./clients/hono.ts";
+import { nvidiaClient } from "./clients/nvidia.ts";
 import { openRouter } from "./clients/openRouter.ts";
 import { respTemp as responseTemplate } from "./data/respTemplate.ts";
 import { getProvidor } from "./utils/getProvidor.ts";
@@ -72,6 +73,7 @@ app.post(
         }
         break;
 
+      // deno-lint-ignore no-fallthrough
       case "gemini": {
         aiResponse = await gemini.models
           .generateContent({
@@ -81,12 +83,33 @@ app.post(
           })
           .then((x) => x.text, null);
       }
+      case "nvidia": {
+        await nvidiaClient.chat.completions
+          .create({
+            model: "deepseek-ai/deepseek-v3.2",
+
+            messages: [
+              {
+                role: "system",
+                content:
+                  "always respond in either arabic or english " +
+                  reqSystemPrompt,
+              },
+
+              { role: "user", content: reqPrompt },
+            ],
+            stream: false,
+          })
+          .then((x) => {
+            aiResponse = x.choices[0].message.content;
+          });
+      }
     }
 
     respTemp.message = (aiResponse ?? null) as string | null;
     !respTemp.message && (respTemp.error = "Error Generating Response.");
     return hctx.json(respTemp, 200);
-  }
+  },
 );
 
 Deno.serve(app.fetch);

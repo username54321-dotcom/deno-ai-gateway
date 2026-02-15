@@ -1,1 +1,1 @@
-export const providors = ["gemini", "groq", "openrouter"] as const;
+export const providors = ["gemini", "groq", "openrouter", "nvidia"] as const;

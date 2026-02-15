@@ -17,7 +17,7 @@ export const headerValidation = zValidator(
     if (!res.success) {
       ctx.json(res.error.message);
     }
-  }
+  },
 );
 
 // Body Validation
