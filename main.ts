@@ -86,14 +86,12 @@ app.post(
       case "nvidia": {
         await nvidiaClient.chat.completions
           .create({
-            model: "deepseek-ai/deepseek-v3.2",
+            model: "openai/gpt-oss-120b",
 
             messages: [
               {
                 role: "system",
-                content:
-                  "always respond in either arabic or english " +
-                  reqSystemPrompt,
+                content: reqSystemPrompt + ` ${reqSystemPrompt ?? ""}`,
               },
 
               { role: "user", content: reqPrompt },
